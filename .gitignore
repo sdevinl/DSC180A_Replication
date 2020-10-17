@@ -1,8 +1,6 @@
 # Raw data directories
-./data/
-./config/
-./references/
-
+./data/raw.json
+./config/config.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
