@@ -1,1 +1,8 @@
+{
+  'cora':
+  {
+    'contents': './data/cora.contents',
+    'cites': './data/cora.cites
+  }
+}
 
