@@ -4,3 +4,5 @@ This repository contains the template in which a data science result replication
 
 You can sample our 2 Layer GCN by running the run.py file. The run.py file uses both the cora.cites and cora.contents datasets from the data directory. Through data ingestion
 we modified the two datasets to become an adjecency matrix and feature matrix, which are used as the input to our GCN model.
+
+* Group Members Steven Liu and Abdullatif Jarkas worked on all parts together.
