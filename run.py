@@ -20,12 +20,13 @@ from scipy.spatial.distance import cdist
 # In[26]:
 
 try:
-        feature_list = (pd.read_csv('/teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep ='\t', header=None))
-        edge_list = pd.read_csv('/teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.cites', sep ='\t', header=None)
-        keys = pd.read_csv('/teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep ='\t', header=None)[[0,1434]]
+        feature_list = (pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep ='\t', header=None))
+        edge_list = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.cites', sep ='\t', header=None)
+        keys = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep ='\t', header=None)[[0,1434]]
 except:
-        feature_list = pd.read_csv('/data/cora.content', sep ='\t', header=None)
-        edge_list = pd.read_csv('/data/cora.cites', sep ='\t', header=None)
+
+    feature_list = pd.read_csv('data/cora.content', sep ='\t', header=None)
+    edge_list = pd.read_csv('data/cora.cites', sep ='\t', header=None)
 
 # In[27]:
 
