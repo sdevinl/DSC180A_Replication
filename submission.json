@@ -3,5 +3,5 @@
 "build": "run.py",
 "library": ["src"],
 "notebook": ["Graph_Data_Analysis.pynb"],
-"targets": [" ", " "]
+"targets": ["/data/cora.content ", "/data/cora.cites"]
 }
