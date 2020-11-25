@@ -12,7 +12,7 @@ import time
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--target', type=str, default=None)
+parser.add_argument('target', type=str, default=None)
 args = parser.parse_args()
 
 
