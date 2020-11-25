@@ -122,10 +122,10 @@ def main():
         GraphSAGE Pooling Aggregator
         '''
         def __init__(self, in_feasts, out_feats):
-            ...
+            "..."
 
         def forward(self, x, neigh):
-            ...
+            '...'
 
     # GraphSAGE Models and Layers
 
@@ -136,13 +136,13 @@ def main():
 
         def __init__(self):
             super(GS_Layer,self).__init__()
-            ...
+            '...'
 
         def forward(self, X, steps, A):
             # X: batch of nodes
             # steps: steps from node for neighborhood
             # A: adjacency matrix to find nodes in neighborhood
-            ...
+            '...'
 
     class GS(torch.nn.Module):
         def __init__(self, nfeat, nhid, nclass):
