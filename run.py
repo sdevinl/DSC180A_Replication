@@ -9,6 +9,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from sklearn import preprocessing as prep
 import time
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--target', type=str, default=None)
+args = parser.parse_args()
 
 
 # In[26]:
@@ -26,8 +31,19 @@ except:
 def main():
         
     # -- My Implementation ---
-    d1 = (pd.read_csv('data/cora.content', sep ='\t', header=None))
-    d2 = pd.read_csv('data/cora.cites', sep ='\t', header=None)
+    d1 = (pd.read_csv('data/cora.content', sep='\t', header=None))
+    d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
+    if args.target == 'test':
+        d1 = pd.DataFrame(data=np.arange(0, 10))
+        d1 = pd.concat([d1, pd.DataFrame(np.random.randint(2, size=(10, 1433)))], axis=1)
+        d1 = pd.concat([d1, pd.DataFrame(np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'C']))], axis=1)
+        d1.columns = np.arange(0, 1435)
+
+        d2 = pd.DataFrame(np.random.randint(10, size=[50, 2]))
+
+    else:
+        d1 = (pd.read_csv('data/cora.content', sep='\t', header=None))
+        d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
 
     # Label Encoder
     le = prep.LabelEncoder()
@@ -292,7 +308,7 @@ def main():
         acc = accuracy(output[train_idx], labels[train_idx])
         loss.backward()
         optimizer.step()
-
+        
         print('Epoch: {:04d}'.format(epoch+1),
               'loss_train: {:.4f}'.format(loss.item()),
               'acc_train: {:.4f}'.format(acc.item()),
