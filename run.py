@@ -34,6 +34,7 @@ def main():
     d1 = (pd.read_csv('data/cora.content', sep='\t', header=None))
     d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
     if args.target == 'test':
+        print('Test')
         d1 = pd.DataFrame(data=np.arange(0, 10))
         d1 = pd.concat([d1, pd.DataFrame(np.random.randint(2, size=(10, 1433)))], axis=1)
         d1 = pd.concat([d1, pd.DataFrame(np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'C']))], axis=1)
@@ -308,7 +309,7 @@ def main():
         acc = accuracy(output[train_idx], labels[train_idx])
         loss.backward()
         optimizer.step()
-        
+
         print('Epoch: {:04d}'.format(epoch+1),
               'loss_train: {:.4f}'.format(loss.item()),
               'acc_train: {:.4f}'.format(acc.item()),
@@ -333,6 +334,7 @@ def main():
 
         # Testing
         test(prep_A)
+
     print('GCN')
     run(30, 'norm')
 
