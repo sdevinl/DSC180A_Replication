@@ -29,7 +29,8 @@ except:
 # In[27]:
 
 def main():
-        
+
+    print('Args', args.target)
     # -- My Implementation ---
     d1 = (pd.read_csv('data/cora.content', sep='\t', header=None))
     d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
