@@ -1,29 +1,29 @@
 ---------GCN----------- 
-Epoch: 0001 loss_train: 379.7428 acc_train: 0.2222 time: 0.0440s
-Epoch: 0002 loss_train: 3051.1865 acc_train: 0.2222 time: 0.0050s
-Epoch: 0003 loss_train: 4768.8145 acc_train: 0.2222 time: 0.0060s
-Epoch: 0004 loss_train: 266.5170 acc_train: 0.1111 time: 0.0050s
-Epoch: 0005 loss_train: 5.3362 acc_train: 0.0000 time: 0.0050s
-Epoch: 0006 loss_train: 2.9242 acc_train: 0.2222 time: 0.0050s
-Epoch: 0007 loss_train: 1.8763 acc_train: 0.5556 time: 0.0050s
-Epoch: 0008 loss_train: 1.2916 acc_train: 0.3333 time: 0.0050s
-Epoch: 0009 loss_train: 1.1369 acc_train: 0.4444 time: 0.0040s
-Epoch: 0010 loss_train: 1.0905 acc_train: 0.4444 time: 0.0050s
+Epoch: 0001 loss_train: 544.5856 acc_train: 0.2222 time: 0.1820s
+Epoch: 0002 loss_train: 1478.2130 acc_train: 0.1111 time: 0.0060s
+Epoch: 0003 loss_train: 1649.6887 acc_train: 0.2222 time: 0.0080s
+Epoch: 0004 loss_train: 857.5197 acc_train: 0.1111 time: 0.0060s
+Epoch: 0005 loss_train: 88.1778 acc_train: 0.1111 time: 0.0050s
+Epoch: 0006 loss_train: 23.7055 acc_train: 0.1111 time: 0.0050s
+Epoch: 0007 loss_train: 14.1267 acc_train: 0.2222 time: 0.0050s
+Epoch: 0008 loss_train: 4.8776 acc_train: 0.3333 time: 0.0050s
+Epoch: 0009 loss_train: 1.9671 acc_train: 0.3333 time: 0.0050s
+Epoch: 0010 loss_train: 1.4897 acc_train: 0.5556 time: 0.0050s
 Optimization Finished! 
-Test set results: loss= 13.5243 accuracy= 0.0000
+Test set results: loss= 0.2055 accuracy= 1.0000
 
 ---------------LPA-GCN---------------------- 
-Epoch: 0001 loss_train: 357.0666 acc_train: 0.1111 time: 0.0050s
-Epoch: 0002 loss_train: 1986.3156 acc_train: 0.2222 time: 0.0060s
-Epoch: 0003 loss_train: 1730.4907 acc_train: 0.1111 time: 0.0050s
-Epoch: 0004 loss_train: 983.5739 acc_train: 0.2222 time: 0.0060s
-Epoch: 0005 loss_train: 478.9819 acc_train: 0.3333 time: 0.0060s
-Epoch: 0006 loss_train: 2.5064 acc_train: 0.3333 time: 0.0060s
-Epoch: 0007 loss_train: 2.5064 acc_train: 0.3333 time: 0.0060s
-Epoch: 0008 loss_train: 2.5064 acc_train: 0.3333 time: 0.0050s
-Epoch: 0009 loss_train: 2.5063 acc_train: 0.3333 time: 0.0060s
-Epoch: 0010 loss_train: 2.5063 acc_train: 0.3333 time: 0.0050s
+Epoch: 0001 loss_train: 172.2261 acc_train: 0.1111 time: 0.0130s
+Epoch: 0002 loss_train: 1086.0963 acc_train: 0.1111 time: 0.0060s
+Epoch: 0003 loss_train: 1740.5712 acc_train: 0.1111 time: 0.0060s
+Epoch: 0004 loss_train: 1316.4998 acc_train: 0.2222 time: 0.0060s
+Epoch: 0005 loss_train: 2.7308 acc_train: 0.1111 time: 0.0060s
+Epoch: 0006 loss_train: 2.7308 acc_train: 0.1111 time: 0.0060s
+Epoch: 0007 loss_train: 2.7308 acc_train: 0.1111 time: 0.0050s
+Epoch: 0008 loss_train: 2.7308 acc_train: 0.1111 time: 0.0060s
+Epoch: 0009 loss_train: 2.7308 acc_train: 0.1111 time: 0.0050s
+Epoch: 0010 loss_train: 2.7308 acc_train: 0.1111 time: 0.0060s
 Optimization Finished! 
-Test set results: loss= 2.7365 accuracy= 0.0000
+Test set results: loss= 2.7313 accuracy= 1.0000
 
 ----------END OF BENCHMARKS--------------
