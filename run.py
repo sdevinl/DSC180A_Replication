@@ -10,32 +10,26 @@ import torch.nn.functional as F
 from sklearn import preprocessing as prep
 import time
 import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument('target', type=str, default=None)
-args = parser.parse_args()
+import sys
 
 
-# In[26]:
 
-try:
-        d1 = (pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep ='\t', header=None))
-        d2 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.cites', sep ='\t', header=None)
-except:
 
-    d1 = pd.read_csv('data/cora.content', sep ='\t', header=None)
-    d2 = pd.read_csv('data/cora.cites', sep ='\t', header=None)
+def main(targets):
 
-# In[27]:
-
-def main():
-
-    print('Args', args.target)
+    print('Args', targets)
     # -- My Implementation ---
-    d1 = (pd.read_csv('data/cora.content', sep='\t', header=None))
-    d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
-    if args.target == 'test':
-        print('Test')
+
+    if len(targets) == 0:
+        try:
+            d1 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep='\t', header=None)
+            d2 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.cites', sep='\t', header=None)
+
+        except:
+            d1 = pd.read_csv('data/cora.content', sep='\t', header=None)
+            d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
+
+    elif targets[0] == 'test':
         d1 = pd.DataFrame(data=np.arange(0, 10))
         d1 = pd.concat([d1, pd.DataFrame(np.random.randint(2, size=(10, 1433)))], axis=1)
         d1 = pd.concat([d1, pd.DataFrame(np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'C']))], axis=1)
@@ -43,9 +37,13 @@ def main():
 
         d2 = pd.DataFrame(np.random.randint(10, size=[50, 2]))
 
-    else:
-        d1 = (pd.read_csv('data/cora.content', sep='\t', header=None))
-        d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
+        # Clear Text File
+        testfile = open('test/testdata.txt', 'w')
+        testfile.write('')
+        testfile.close()
+        # New Output
+        testfile = open('test/testdata.txt', 'a')
+
 
     # Label Encoder
     le = prep.LabelEncoder()
@@ -70,7 +68,7 @@ def main():
     # Adjacency matrix
     d2 = pd.crosstab(d2[0], d2[1])
     idx = d2.columns.union(d2.index)
-    d2 = d2.reindex(index = idx, columns = idx, fill_value=0)
+    d2 = d2.reindex(index=idx, columns=idx, fill_value=0)
     d2 = d2.reset_index().drop(columns=['index'])
     d2.columns = np.arange(len(d2.columns))
 
@@ -100,6 +98,7 @@ def main():
         '''
         GraphSAGE Mean Aggregator
         '''
+
         def __init__(self, in_feats, out_feats):
             super(Mean_Agg, self).__init__()
 
@@ -121,6 +120,7 @@ def main():
         '''
         GraphSAGE Pooling Aggregator
         '''
+
         def __init__(self, in_feasts, out_feats):
             "..."
 
@@ -135,7 +135,7 @@ def main():
         '''
 
         def __init__(self):
-            super(GS_Layer,self).__init__()
+            super(GS_Layer, self).__init__()
             '...'
 
         def forward(self, X, steps, A):
@@ -160,7 +160,7 @@ def main():
 
         def forward(self, X, A, prep_A):
             X = F.relu(self.gc1(X, A, prep_A))
-            #x = F.relu(self.gc2(x, adj))
+            # x = F.relu(self.gc2(x, adj))
             X = self.gc2(X, A, prep_A)
             return F.log_softmax(X, dim=1)
 
@@ -171,6 +171,7 @@ def main():
         """
         Simple GCN layer
         """
+
         def __init__(self, in_feats, out_feats):
             super(GCN_Layer, self).__init__()
             self.in_feats = in_feats
@@ -195,11 +196,10 @@ def main():
             elif prep_A == "norm":
                 I = torch.eye(A.shape[0])
                 A_hat = A + I
-                D_hat = torch.Tensor(np.diag(A_hat.sum(axis=1) ** (-1/2)))
+                D_hat = torch.Tensor(np.diag(A_hat.sum(axis=1) ** (-1 / 2)))
                 output = torch.mm(D_hat, A_hat)
                 output = torch.mm(output, D_hat)
                 output = torch.mm(output, right_term)
-
 
             return output
 
@@ -213,14 +213,14 @@ def main():
             # GCN Layers
             self.gc1 = GCN_Layer(nfeat, nhid)
             self.gc2 = GCN_Layer(nhid, nclass)
-            #self.gc3 = GCN_Layer(nhid-300, nclass)
+            # self.gc3 = GCN_Layer(nhid-300, nclass)
 
         def forward(self, X, A, prep_A):
             """
             """
 
             X = F.relu(self.gc1(X, A, prep_A))
-            #x = F.relu(self.gc2(x, adj))
+            # x = F.relu(self.gc2(x, adj))
             X = self.gc2(X, A, prep_A)
             return F.log_softmax(X, dim=1)
 
@@ -265,85 +265,125 @@ def main():
             X, Y_hat = self.gcn_lpa2(X, A, Y_hat)
             return F.relu(X), F.relu(Y_hat)
 
-    print('LPA-GCN')
-    GCN_LPA_model = GCN_LPA(X.shape[1], 300, len(le.classes_), A )
-    optimizer = torch.optim.SGD(GCN_LPA_model.parameters(), lr=.1)
-    criterion = torch.nn.CrossEntropyLoss()
 
-    Lambda = .4
-    epochs = 10
-    for epoch in np.arange(epochs):
-        t = time.time()
-        GCN_LPA_model.train()
-        optimizer.zero_grad()
+    def run_LPA_GCN(epochs=10, Lambda=.4):
+        testfile.write('---------------LPA-GCN---------------------- \n')
+        print('---------------LPA-GCN----------------------')
+        GCN_LPA_model = GCN_LPA(X.shape[1], 300, len(le.classes_), A)
+        optimizer = torch.optim.SGD(GCN_LPA_model.parameters(), lr=.1)
+        criterion = torch.nn.CrossEntropyLoss()
+
+        for epoch in np.arange(epochs):
+            t = time.time()
+            GCN_LPA_model.train()
+            optimizer.zero_grad()
+            output, Y_hat = GCN_LPA_model(X, A, labels_distr)
+
+            loss_gcn = criterion(output[train_idx], labels[train_idx])
+            loss_lpa = criterion(Y_hat[train_idx], labels[train_idx])
+
+            acc = accuracy(output[train_idx], labels[train_idx])
+            loss_train = loss_gcn + Lambda * loss_lpa
+
+            loss_train.backward()
+            optimizer.step()
+
+            testfile.write('Epoch: {:04d}'.format(epoch + 1) + ' ' +
+                  'loss_train: {:.4f}'.format(loss_train.item()) + ' ' +
+                  'acc_train: {:.4f}'.format(acc.item()) + ' ' +
+                  'time: {:.4f}s'.format(time.time() - t) + '\n')
+
+            print('Epoch: {:04d}'.format(epoch + 1),
+                  'loss_train: {:.4f}'.format(loss_train.item()),
+                  'acc_train: {:.4f}'.format(acc.item()),
+                  'time: {:.4f}s'.format(time.time() - t))
+
+        # Test
+        GCN_LPA_model.eval()
         output, Y_hat = GCN_LPA_model(X, A, labels_distr)
 
-        loss_gcn = criterion(output[train_idx], labels[train_idx])
-        loss_lpa = criterion(Y_hat[train_idx], labels[train_idx])
-
-        acc = accuracy(output[train_idx], labels[train_idx])
-        loss_train = loss_gcn + Lambda * loss_lpa
-
-        loss_train.backward()
-        optimizer.step()
-
-        print('Epoch: {:04d}'.format(epoch+1),
-              'loss_train: {:.4f}'.format(loss_train.item()),
-              'acc_train: {:.4f}'.format(acc.item()),
-              'time: {:.4f}s'.format(time.time() - t))
-
-    # Model and Optimizer
-
-    # GCN takes in number of papers, number hidden layers, and number of classes
-    model = GCN(X.shape[1], 300, len(le.classes_))
-
-    optimizer = torch.optim.SGD(model.parameters(), lr=.1)
-    criterion = torch.nn.CrossEntropyLoss()
-
-    # Train and Test functions
-    def train(epoch, prep_A = None):
-        t = time.time()
-        model.train()
-        optimizer.zero_grad()
-        output = model(X, A, prep_A)
-        loss = criterion(output[train_idx], labels[train_idx])
-        acc = accuracy(output[train_idx], labels[train_idx])
-        loss.backward()
-        optimizer.step()
-
-        print('Epoch: {:04d}'.format(epoch+1),
-              'loss_train: {:.4f}'.format(loss.item()),
-              'acc_train: {:.4f}'.format(acc.item()),
-              'time: {:.4f}s'.format(time.time() - t))
-
-    def test(prep_A = None):
-        model.eval()
-        output = model(X, A, prep_A)
-        loss_test = criterion(output[test_idx], labels[test_idx])
+        loss_gcn = criterion(output[test_idx], labels[test_idx])
+        loss_lpa = criterion(Y_hat[test_idx], labels[test_idx])
         acc_test = accuracy(output[test_idx], labels[test_idx])
+
+        loss_test = loss_gcn + Lambda * loss_lpa
+
+        testfile.write('Optimization Finished! \n')
+        testfile.write("Test set results:" + ' ' +
+              "loss= {:.4f}".format(loss_test.item()) + ' ' +
+              "accuracy= {:.4f}".format(acc_test.item()) + '\n')
+
+        print("Optimization Finished!")
         print("Test set results:",
               "loss= {:.4f}".format(loss_test.item()),
               "accuracy= {:.4f}".format(acc_test.item()))
+        testfile.write('\n')
+        print('\n')
+
+        # Model and Optimizer
+
+        # GCN takes in number of papers, number hidden layers, and number of classes
 
     # Train model
-    def run(epochs, prep_A):
+    def run_GCN(epochs=10, prep_A=None):
+        testfile.write('---------GCN----------- \n')
+        print('---------GCN-----------')
+        model = GCN(X.shape[1], 300, len(le.classes_))
+
+        optimizer = torch.optim.SGD(model.parameters(), lr=.1)
+        criterion = torch.nn.CrossEntropyLoss()
+
+        # Train and Test functions
+        def train(epoch, prep_A=None):
+            t = time.time()
+            model.train()
+            optimizer.zero_grad()
+            output = model(X, A, prep_A)
+            loss = criterion(output[train_idx], labels[train_idx])
+            acc = accuracy(output[train_idx], labels[train_idx])
+            loss.backward()
+            optimizer.step()
+
+            testfile.write('Epoch: {:04d}'.format(epoch + 1) + ' '
+                  'loss_train: {:.4f}'.format(loss.item())+ ' '
+                  'acc_train: {:.4f}'.format(acc.item())+ ' '
+                  'time: {:.4f}s'.format(time.time() - t) + '\n')
+            print('Epoch: {:04d}'.format(epoch + 1),
+                  'loss_train: {:.4f}'.format(loss.item()),
+                  'acc_train: {:.4f}'.format(acc.item()),
+                  'time: {:.4f}s'.format(time.time() - t))
+
+        def test(prep_A=None):
+            model.eval()
+            output = model(X, A, prep_A)
+            loss_test = criterion(output[test_idx], labels[test_idx])
+            acc_test = accuracy(output[test_idx], labels[test_idx])
+
+            testfile.write("Test set results:"+ ' '
+                  "loss= {:.4f}".format(loss_test.item()) + ' '
+                  "accuracy= {:.4f}".format(acc_test.item()) + '\n')
+            print("Test set results:",
+                  "loss= {:.4f}".format(loss_test.item()),
+                  "accuracy= {:.4f}".format(acc_test.item()))
+
+            testfile.write ('\n')
+            print('\n')
         t_total = time.time()
         for epoch in range(epochs):
             train(epoch, prep_A)
+
+        testfile.write('Optimization Finished! \n')
         print("Optimization Finished!")
         print("Total time elapsed: {:.4f}s".format(time.time() - t_total))
 
         # Testing
         test(prep_A)
 
-    print('GCN')
-    run(30, 'norm')
+    run_GCN(prep_A='norm')
+    run_LPA_GCN()
+    testfile.write('----------END OF BENCHMARKS--------------')
+    print('------------END OF BENCHMARKS--------------')
 
-
-main()
-
-
-
-
-
-
+if __name__ == '__main__':
+    targets = sys.argv[1:]
+    main(targets)
