@@ -3,11 +3,11 @@
 
 # data science notebook
 # https://hub.docker.com/repository/docker/ucsdets/datascience-notebook/tags
-ARG BASE_CONTAINER=ucsdets/datascience-notebook:2020.2-stable
+#ARG BASE_CONTAINER=ucsdets/datascience-notebook:2020.2-stable
 
 # scipy/machine learning (tensorflow)
 # https://hub.docker.com/repository/docker/ucsdets/scipy-ml-notebook/tags
-#ARG BASE_CONTAINER=ucsdets/scipy-ml-notebook:2020.2-stable
+ARG BASE_CONTAINER=ucsdets/scipy-ml-notebook:2020.2-stable
 
 FROM $BASE_CONTAINER
 
@@ -27,7 +27,7 @@ RUN pip install --no-cache-dir numpy
 RUN pip install --no-cache-dir pandas
 RUN pip install --no-cache-dir babypandas
 RUN pip install --no-cache-dir geopandas 
-RUN pip install --no-cache-dir torch sklearn time argparse
+RUN pip install --no-cache-dir sklearn time argparse
 
 # 4) change back to notebook user
 COPY /run_jupyter.sh /
