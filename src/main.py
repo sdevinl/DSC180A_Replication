@@ -3,14 +3,7 @@ import time
 from src.data import *
 from src.utils import *
 
-testfile, X, A, train_idx, test_idx, labels_distr, labels, le
-
-
-def init_variables(testfile, X, A, train_idx, test_idx, labels_distr, labels, le):
-    testfile, X, A, train_idx, test_idx, labels_distr, labels, le = testfile, X, A, train_idx, test_idx, labels_distr, labels, le
-
-    # return testfile, X, A, train_idx, test_idx, labels_distr, labels, le
-
+#testfile, X, A, train_idx, test_idx, labels_distr, labels, le = 0, 0, 0, 0, 0, 0, 0, 0
 
 def run_LPA_GCN(epochs=10, Lambda=.4):
     testfile.write('---------------LPA-GCN---------------------- \n')
@@ -129,4 +122,3 @@ def run_GCN(epochs=10, prep_A=None):
     # Testing
     test(prep_A)
 
- 
