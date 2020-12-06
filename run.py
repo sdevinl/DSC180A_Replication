@@ -13,14 +13,11 @@ import argparse
 import sys
 
 
-
-
 def main(targets):
-
     print('Args', targets)
-    # -- My Implementation ---
 
-    if len(targets) == 0:
+    # -- My Implementation ---
+    if len(targets) == 0 or targets[0] != 'test':
         try:
             d1 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep='\t', header=None)
             d2 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.cites', sep='\t', header=None)
@@ -28,6 +25,12 @@ def main(targets):
         except:
             d1 = pd.read_csv('data/cora.content', sep='\t', header=None)
             d2 = pd.read_csv('data/cora.cites', sep='\t', header=None)
+
+        testfile = open('test/coradata.txt', 'w')
+        testfile.write('')
+        testfile.close()
+        # New Output
+        testfile = open('test/coradata.txt', 'a')
 
     elif targets[0] == 'test':
         d1 = pd.DataFrame(data=np.arange(0, 10))
@@ -43,7 +46,6 @@ def main(targets):
         testfile.close()
         # New Output
         testfile = open('test/testdata.txt', 'a')
-
 
     # Label Encoder
     le = prep.LabelEncoder()
@@ -265,7 +267,6 @@ def main(targets):
             X, Y_hat = self.gcn_lpa2(X, A, Y_hat)
             return F.relu(X), F.relu(Y_hat)
 
-
     def run_LPA_GCN(epochs=10, Lambda=.4):
         testfile.write('---------------LPA-GCN---------------------- \n')
         print('---------------LPA-GCN----------------------')
@@ -289,9 +290,9 @@ def main(targets):
             optimizer.step()
 
             testfile.write('Epoch: {:04d}'.format(epoch + 1) + ' ' +
-                  'loss_train: {:.4f}'.format(loss_train.item()) + ' ' +
-                  'acc_train: {:.4f}'.format(acc.item()) + ' ' +
-                  'time: {:.4f}s'.format(time.time() - t) + '\n')
+                           'loss_train: {:.4f}'.format(loss_train.item()) + ' ' +
+                           'acc_train: {:.4f}'.format(acc.item()) + ' ' +
+                           'time: {:.4f}s'.format(time.time() - t) + '\n')
 
             print('Epoch: {:04d}'.format(epoch + 1),
                   'loss_train: {:.4f}'.format(loss_train.item()),
@@ -310,8 +311,8 @@ def main(targets):
 
         testfile.write('Optimization Finished! \n')
         testfile.write("Test set results:" + ' ' +
-              "loss= {:.4f}".format(loss_test.item()) + ' ' +
-              "accuracy= {:.4f}".format(acc_test.item()) + '\n')
+                       "loss= {:.4f}".format(loss_test.item()) + ' ' +
+                       "accuracy= {:.4f}".format(acc_test.item()) + '\n')
 
         print("Optimization Finished!")
         print("Test set results:",
@@ -345,9 +346,10 @@ def main(targets):
             optimizer.step()
 
             testfile.write('Epoch: {:04d}'.format(epoch + 1) + ' '
-                  'loss_train: {:.4f}'.format(loss.item())+ ' '
-                  'acc_train: {:.4f}'.format(acc.item())+ ' '
-                  'time: {:.4f}s'.format(time.time() - t) + '\n')
+                                                               'loss_train: {:.4f}'.format(loss.item()) + ' '
+                                                                                                          'acc_train: {:.4f}'.format(
+                acc.item()) + ' '
+                              'time: {:.4f}s'.format(time.time() - t) + '\n')
             print('Epoch: {:04d}'.format(epoch + 1),
                   'loss_train: {:.4f}'.format(loss.item()),
                   'acc_train: {:.4f}'.format(acc.item()),
@@ -359,15 +361,17 @@ def main(targets):
             loss_test = criterion(output[test_idx], labels[test_idx])
             acc_test = accuracy(output[test_idx], labels[test_idx])
 
-            testfile.write("Test set results:"+ ' '
-                  "loss= {:.4f}".format(loss_test.item()) + ' '
-                  "accuracy= {:.4f}".format(acc_test.item()) + '\n')
+            testfile.write("Test set results:" + ' '
+                                                 "loss= {:.4f}".format(loss_test.item()) + ' '
+                                                                                           "accuracy= {:.4f}".format(
+                acc_test.item()) + '\n')
             print("Test set results:",
                   "loss= {:.4f}".format(loss_test.item()),
                   "accuracy= {:.4f}".format(acc_test.item()))
 
-            testfile.write ('\n')
+            testfile.write('\n')
             print('\n')
+
         t_total = time.time()
         for epoch in range(epochs):
             train(epoch, prep_A)
@@ -383,6 +387,8 @@ def main(targets):
     run_LPA_GCN()
     testfile.write('----------END OF BENCHMARKS--------------')
     print('------------END OF BENCHMARKS--------------')
+    testfile.close()
+
 
 if __name__ == '__main__':
     targets = sys.argv[1:]
