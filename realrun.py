@@ -10,9 +10,15 @@ def main(targets):
     src.main.X, src.main.A, src.main.train_idx, src.main.test_idx, src.main.labels = src.data.preprocess_data(d1, d2, labels, targets)
     src.main.testfile = testfile
 
-    src.main.run_LPA_GCN(3)
-    src.main.run_GCN(3)
-    src.main.run_GS(3)
+    try:
+        epochs = int(targets[1])
+    except IndexError:
+        print('No epochs listed using 3 epochs')
+        epochs = 10
+
+    src.main.run_LPA_GCN(epochs)
+    src.main.run_GCN(epochs)
+    src.main.run_GS(epochs)
 
 if __name__ == '__main__':
     targets = sys.argv[1:]
