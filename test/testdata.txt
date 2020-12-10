@@ -1,28 +1,20 @@
 ---------------LPA-GCN---------------------- 
-Epoch: 0001 loss_train: 281.2324 acc_train: 0.2222 time: 0.0560s
-Epoch: 0002 loss_train: 1157.2352 acc_train: 0.2222 time: 0.0090s
-Epoch: 0003 loss_train: 1035.9819 acc_train: 0.2222 time: 0.0100s
-Epoch: 0004 loss_train: 306.8513 acc_train: 0.0000 time: 0.0110s
-Epoch: 0005 loss_train: 359.3102 acc_train: 0.1111 time: 0.0080s
-Epoch: 0006 loss_train: 1028.1777 acc_train: 0.1111 time: 0.0090s
-Epoch: 0007 loss_train: 1104.5609 acc_train: 0.0000 time: 0.0080s
-Epoch: 0008 loss_train: 538.9172 acc_train: 0.3333 time: 0.0090s
-Epoch: 0009 loss_train: 128.3642 acc_train: 0.2222 time: 0.0080s
-Epoch: 0010 loss_train: 2.7186 acc_train: 0.2222 time: 0.0090s
+Epoch: 0001 loss_train: 284.6734 acc_train: 0.1111 time: 0.0480s
+Epoch: 0002 loss_train: 1682.0568 acc_train: 0.2222 time: 0.0050s
+Epoch: 0003 loss_train: 73.6334 acc_train: 0.1111 time: 0.0060s
 Optimization Finished! 
-Test set results: loss= 2.6578 accuracy= 0.0000
+Test set results: loss= 2.6558 accuracy= 0.0000
 
 ---------GCN----------- 
-Epoch: 0001 loss_train: 2472.1106 acc_train: 0.2222 time: 0.0040s
-Epoch: 0002 loss_train: 10586438.0000 acc_train: 0.2222 time: 0.0060s
-Epoch: 0003 loss_train: 947644.1250 acc_train: 0.2222 time: 0.0060s
-Epoch: 0004 loss_train: 15825.3799 acc_train: 0.1111 time: 0.0060s
-Epoch: 0005 loss_train: 1.9459 acc_train: 0.2222 time: 0.0090s
-Epoch: 0006 loss_train: 1.9459 acc_train: 0.2222 time: 0.0100s
-Epoch: 0007 loss_train: 1.9459 acc_train: 0.2222 time: 0.0130s
-Epoch: 0008 loss_train: 1.9459 acc_train: 0.2222 time: 0.0090s
-Epoch: 0009 loss_train: 1.9459 acc_train: 0.2222 time: 0.0060s
-Epoch: 0010 loss_train: 1.9459 acc_train: 0.2222 time: 0.0100s
+Epoch: 0001 loss_train: 10085.9502 acc_train: 0.1111 time: 0.0040s
+Epoch: 0002 loss_train: 44323476.0000 acc_train: 0.2222 time: 0.0050s
+Epoch: 0003 loss_train: 67804536.0000 acc_train: 0.2222 time: 0.0050s
 Optimization Finished! 
 Test set results: loss= 1.9459 accuracy= 0.0000
+
+----------------GraphSAGE---------------Epoch: 0001 loss_train: 1285.8599 acc_train: 0.0000 time: 0.0320s
+Epoch: 0002 loss_train: 8300.1270 acc_train: 0.2222 time: 0.0480s
+Epoch: 0003 loss_train: 6783.5518 acc_train: 0.1111 time: 0.0410s
+Optimization Finished! 
+Test set results: loss= 2469.2451 accuracy= 0.0000
 

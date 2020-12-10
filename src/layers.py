@@ -4,27 +4,30 @@ import torch.nn as nn
 from src.data import *
 
 
+# Aggregators
 class Mean_Agg(torch.nn.Module):
     '''
     GraphSAGE Mean Aggregator
     '''
 
-    def __init__(self, in_feats, out_feats):
+    def __init__(self):
         super(Mean_Agg, self).__init__()
 
-        self.fc_x = nn.Linear(in_feats, out_feats)
-        self.fc_neigh = nn.Linear(in_feats, out_feats)
-        self.out_feats = out_feats
+    def forward(self, h, A, W, activation='relu'):
+        A = torch.tensor(A)
+        A = A.float()
+        h = h.float()
 
-    def forward(self, x, neigh):
         # X: batch of nodes
-        agg_neigh = neigh.view(x.size(0), -1, neigh.size(1))
-        agg_neigh = agg_neigh.mean(dim=1)
+        h1 = h
+        h = torch.matmul(h.T, A) / torch.sum(A)
+        h = torch.cat((h1, h.T), 1)
+        h = torch.matmul(W, h.T.float())
 
-        output = torch.cat([self.fc_x(x), self.fc_neigh(agg_neigh)], dim=1)
+        if activation == 'relu':
+            h = F.relu(h.T)
 
-        # Average of Neighborhood feature matrix for each node in batch
-        return F.relu(output)
+        return h
 
 
 class MaxPool_Agg(torch.nn.Module):
@@ -33,14 +36,12 @@ class MaxPool_Agg(torch.nn.Module):
     '''
 
     def __init__(self, in_feasts, out_feats):
-        "..."
+        ...
 
     def forward(self, x, neigh):
-        '...'
-
+        ...
 
 # GraphSAGE Models and Layers
-
 class GS_Layer(torch.nn.Module):
     '''
     GraphSAGE Layer

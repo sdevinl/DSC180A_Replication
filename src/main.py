@@ -85,8 +85,8 @@ def run_GCN(epochs=10, prep_A=None):
         optimizer.step()
 
         testfile.write('Epoch: {:04d}'.format(epoch + 1) + ' '
-                                                           'loss_train: {:.4f}'.format(loss.item()) + ' '
-                                                                                                      'acc_train: {:.4f}'.format(
+                       'loss_train: {:.4f}'.format(loss.item()) + ' '
+                       'acc_train: {:.4f}'.format(
             acc.item()) + ' '
                           'time: {:.4f}s'.format(time.time() - t) + '\n')
         print('Epoch: {:04d}'.format(epoch + 1),
@@ -101,9 +101,8 @@ def run_GCN(epochs=10, prep_A=None):
         acc_test = accuracy(output[test_idx], labels[test_idx])
 
         testfile.write("Test set results:" + ' '
-                                             "loss= {:.4f}".format(loss_test.item()) + ' '
-                                                                                       "accuracy= {:.4f}".format(
-            acc_test.item()) + '\n')
+                       "loss= {:.4f}".format(loss_test.item()) + ' '
+                       "accuracy= {:.4f}".format(acc_test.item()) + '\n')
         print("Test set results:",
               "loss= {:.4f}".format(loss_test.item()),
               "accuracy= {:.4f}".format(acc_test.item()))
@@ -121,4 +120,60 @@ def run_GCN(epochs=10, prep_A=None):
 
     # Testing
     test(prep_A)
+
+
+# GraphSAGE model
+def run_GS(epochs=10, Lambda=10):
+    testfile.write('----------------GraphSAGE--------------- \n')
+    print('-----------GraphSAGE------------------')
+    GS_model = GS(X.shape[1], 300, len(le.classes_))
+    optimizer = torch.optim.SGD(GS_model.parameters(), lr=.1)
+    criterion = torch.nn.CrossEntropyLoss()
+
+    # Train and Test functions
+    def train(epoch, prep_A=None):
+        t = time.time()
+        GS_model.train()
+        optimizer.zero_grad()
+        output = GS_model(X, A)
+        loss = criterion(output[train_idx], labels[train_idx])
+        acc = accuracy(output[train_idx], labels[train_idx])
+        loss.backward()
+        optimizer.step()
+
+        testfile.write('Epoch: {:04d}'.format(epoch + 1) + ' '
+                        'loss_train: {:.4f}'.format(loss.item()) + ' '
+                        'acc_train: {:.4f}'.format(acc.item()) + ' '
+                        'time: {:.4f}s'.format(time.time() - t) + '\n')
+        print('Epoch: {:04d}'.format(epoch + 1),
+              'loss_train: {:.4f}'.format(loss.item()),
+              'acc_train: {:.4f}'.format(acc.item()),
+              'time: {:.4f}s'.format(time.time() - t))
+
+    def test(prep_A=None):
+        GS_model.eval()
+        output = GS_model(X, A)
+        loss_test = criterion(output[test_idx], labels[test_idx])
+        acc_test = accuracy(output[test_idx], labels[test_idx])
+
+        testfile.write("Test set results:" + ' '
+                        "loss= {:.4f}".format(loss_test.item()) + ' '
+                        "accuracy= {:.4f}".format(acc_test.item()) + '\n')
+        print("Test set results:",
+              "loss= {:.4f}".format(loss_test.item()),
+              "accuracy= {:.4f}".format(acc_test.item()))
+
+        testfile.write('\n')
+        print('\n')
+
+    t_total = time.time()
+    for epoch in range(epochs):
+        train(epoch)
+
+    testfile.write('Optimization Finished! \n')
+    print("Optimization Finished!")
+    print("Total time elapsed: {:.4f}s".format(time.time() - t_total))
+
+    # Testing
+    test()
 
