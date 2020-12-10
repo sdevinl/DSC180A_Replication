@@ -5,9 +5,15 @@ import networkx as nx
 from sklearn import preprocessing as prep
 
 
-
 def make_dataset(targets):
-    if len(targets) == 0 or targets[0] == 'cora':
+    try:
+        if targets[0] == 'cora':
+            pass
+    except IndexError:
+        print('No data target found, using test')
+        targets[0] ='test'
+
+    if targets[0] == 'cora':
         try:
             d1 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.content', sep='\t', header=None)
             d2 = pd.read_csv('teams/DSC180A_FA20_A00/b01graphdataanalysis/cora.cites', sep='\t', header=None)
@@ -70,11 +76,10 @@ def make_dataset(targets):
     for row in range(len(labels)):
         labels_distr[row][labels[row]] = 1
 
-
     return testfile, d1, d2, labels, targets, labels_distr, le
 
-def preprocess_data(d1, d2, labels, targets):
 
+def preprocess_data(d1, d2, labels, targets):
     # Adjacency matrix
     G = nx.Graph()
     G.add_edges_from(d2.values)
@@ -84,9 +89,9 @@ def preprocess_data(d1, d2, labels, targets):
     # Feature Matrix and Labels
 
     # labels = labels[:2137].flatten()
-    #labels = torch.Tensor(labels).long()
+    # labels = torch.Tensor(labels).long()
 
-    if (targets[0] == 'cora') or (targets[0]=='test'):
+    if (targets[0] == 'cora') or (targets[0] == 'test'):
         columns_to_drop = [0, d1.iloc[:, -1].name]
 
     else:
@@ -98,8 +103,6 @@ def preprocess_data(d1, d2, labels, targets):
 
     # Create label distibution for LPA
 
-
-
     # Make Train/Test Sets
     train_idx = list(d2.sample(frac=.9).index)
     test_idx = list(set(d2.index) - set(train_idx))
@@ -108,4 +111,3 @@ def preprocess_data(d1, d2, labels, targets):
         X = X.astype('int64')
 
     return X, A, train_idx, test_idx, labels
-
