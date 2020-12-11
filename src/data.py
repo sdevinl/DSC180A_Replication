@@ -57,18 +57,42 @@ def make_dataset(targets):
         # New Output
         testfile = open('test/ogbdata.txt', 'a')
 
+    elif targets[0] == 'ogbsample':
+        from ogb.nodeproppred import NodePropPredDataset
+
+        d = NodePropPredDataset('ogbn-arxiv', root='/datasets/ogb/ogbn-arxiv')
+        d2 = pd.DataFrame(d[0][0]['edge_index'].T)
+        d1 = pd.DataFrame(d[0][0]['node_feat'])
+        labels = d[0][1]
+
+        # Sample of OGB dataset
+        d2 = d2.sort_values(0).iloc[:2000]
+        partial_idx = list(set(d2[0].unique()) | set(d2[1].unique()))
+        d1 = d1.iloc[partial_idx]
+
+        # Clear Text File
+        testfile = open('test/ogbdata.txt', 'w')
+        testfile.write('')
+        testfile.close()
+        # New Output
+        testfile = open('test/ogbdata.txt', 'a')
+
+
     le = prep.LabelEncoder()
     le.fit(d1.iloc[:, -1])
     d1.iloc[:, -1] = le.transform(d1.iloc[:, -1])
 
     if targets[0] == 'test' or targets[0] == 'cora':
-
         d1 = d1.set_index(0)
         d1 = d1.sort_index()
         d1 = d1.reset_index()
         labels = d1.iloc[:, -1]
+
+    elif targets[0] == 'ogbsample':
+        labels = d[0][1].flatten()[partial_idx]
+
     else:
-        labels = d[0][1]
+        labels = d[0][1].flatten()
 
     labels = torch.Tensor(labels).long()
 

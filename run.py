@@ -15,8 +15,8 @@ def main(targets):
     try:
         epochs = int(targets[1])
     except IndexError:
-        print('No epochs listed using 3 epochs')
-        epochs = 10
+        print('No epochs listed using ' + epochs + ' epochs')
+        epochs = 3
 
     src.main.run_LPA_GCN(epochs)
     src.main.run_GCN(epochs)
