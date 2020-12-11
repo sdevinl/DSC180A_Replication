@@ -2,8 +2,8 @@
 
 **Basic Parameters:**
 
-  -data   The input citation data. (default: test)  
-  -epochs Number of epochs (default: 10)  
-  -predA  Adjacency matrix normalization (default: norm)  
+  -data:  The input citation data. (default: test)  
+  -epochs:  Number of epochs (default: 10)  
+  -predA: Adjacency matrix normalization (default: norm)  
 
 
