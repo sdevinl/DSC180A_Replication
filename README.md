@@ -3,8 +3,8 @@
 **About:**  
   This repository contains the implementation and the benchmarks results of the classical GCN, GraphSAGE, and LPA-GCN on the citation networks Cora and OGB-arXiv.  
   
-**Setting Up Docker Image**
-  A docker image has been created to run the required environment of this project. The docker repository is: https://hub.docker.com/repository/docker/sdevinl/dsc180a
+**Setting Up Docker Image**  
+  A docker image has been created to run the required environment of this project. The docker repository is:      https://hub.docker.com/repository/docker/sdevinl/dsc180a
   
 **Example run.py usage:**    
   python run.py cora 100 norm  
