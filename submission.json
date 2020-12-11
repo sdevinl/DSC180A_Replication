@@ -3,5 +3,7 @@
 "build": "run.py",
 "library": ["src"],
 "notebook": ["Graph_Data_Analysis.pynb"],
-"targets": ["/data/cora.content ", "/data/cora.cites"]
+"targets": ["/data/cora.content ", "/data/cora.cites"],
+"dockerhub-id": "sdevinl/dsc180a:latest"
+
 }
