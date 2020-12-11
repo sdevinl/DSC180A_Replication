@@ -1,4 +1,4 @@
-## DSC180A A PyTorch Benchmark of GCN, GraphSAGE, and LPA-GCN on Citation graph networks.
+## DSC180A PyTorch implementation and benchmark of GCN variants
 
 **Basic Parameters:**
 
