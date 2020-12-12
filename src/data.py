@@ -3,6 +3,8 @@ import numpy as np
 import torch
 import networkx as nx
 from sklearn import preprocessing as prep
+from scipy import sparse
+from src.utils import *
 
 
 def make_dataset(targets):
@@ -135,3 +137,77 @@ def preprocess_data(d1, d2, labels, targets):
         X = X.astype('int64')
 
     return X, A, train_idx, test_idx, labels
+
+
+# new
+def cora_ingestion(fp):
+    feature_list = (pd.read_csv(fp + 'cora.content', sep='\t', header=None))
+    edge_list = pd.read_csv(fp + 'cora.cites', sep='\t', header=None)
+
+    features = sparse.csr_matrix(feature_list[feature_list.columns[1:-1]].values, dtype=np.float32)
+    # features = normalize(features)
+    features = torch.FloatTensor(np.array(features.todense()))
+
+    idx = np.array(feature_list[0], dtype=np.int32)
+    idx_map = {j: i for i, j in enumerate(idx)}
+
+    edges = np.array(edge_list.values.tolist())
+    edges = np.array(list(map(idx_map.get, edges.flatten()))).reshape(edges.shape)
+
+    labels = cat_encode(feature_list[1434])
+    labels_lpa = (pd.get_dummies(labels)).to_numpy()
+
+    adj = to_adj_list(edges, labels)
+    labels = torch.LongTensor(labels)
+
+    split1 = int(feature_list.shape[0] * .80)
+    split2 = int(split1 + feature_list.shape[0] * .1)
+
+    idx_train = range(split1)
+    idx_val = range(split1, split2)
+    idx_test = range(split2, feature_list.shape[0])
+
+    idx_train = torch.LongTensor(idx_train)
+    idx_val = torch.LongTensor(idx_val)
+    idx_test = torch.LongTensor(idx_test)
+
+    return adj, features, labels, idx_train, idx_val, idx_test, labels_lpa
+
+
+def arxiv_ingestion():
+    from ogb.nodeproppred import NodePropPredDataset
+
+    d = NodePropPredDataset('ogbn-arxiv')
+
+    edge_list = pd.DataFrame(d[0][0]['edge_index'].T)
+    feature_list = pd.DataFrame(d[0][0]['node_feat'])  # [:3000]
+    labels = d.labels
+
+    # Used Sample []
+    # sample_labels = d.labels[:3000]
+
+    idx = np.array(list(range(feature_list.shape[0])), dtype=np.int32)
+    idx_map = {j: i for i, j in enumerate(idx)}
+
+    edges = np.array(edge_list.values.tolist())
+    edges = np.array(list(map(idx_map.get, edges.flatten()))).reshape(edges.shape)
+
+    features = sparse.csr_matrix(d.graph['node_feat'], dtype=np.float32)
+    features = torch.FloatTensor(np.array(features.todense()))
+
+    labels = np.array(labels.flatten())
+
+    labels_lpa = (pd.get_dummies(labels)).to_numpy()
+
+    adj = to_adj_list(edges, labels)
+    labels = torch.LongTensor(labels)
+
+    idx_train = d[0][0]['node_year'].flatten() < 2017
+    idx_val = d[0][0]['node_year'].flatten() == 2018
+    idx_test = d[0][0]['node_year'].flatten() == 2019
+
+    idx_train = torch.LongTensor(idx_train)
+    idx_val = torch.LongTensor(idx_val)
+    idx_test = torch.LongTensor(idx_test)
+
+    return adj, features, labels, idx_train, idx_val, idx_test, labels_lpa

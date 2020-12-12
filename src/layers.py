@@ -20,9 +20,10 @@ class Mean_Agg(torch.nn.Module):
 
         # X: batch of nodes
         h1 = h
-        h = torch.matmul(h.T, A) / torch.sum(A)
-        h = torch.cat((h1, h.T), 1)
-        h = torch.matmul(W, h.T.float())
+        h = torch.sparse.mm(A, h) / torch.sparse.sum(A)
+        print(h1.shape, h.shape)
+        h = torch.cat((h1, h), 1)
+        h = torch.spmm(W, h.T.float())
 
         if activation == 'relu':
             h = F.relu(h.T)
@@ -61,10 +62,10 @@ class GS_Layer(torch.nn.Module):
 # params:
 # A is the adj matrix
 # X is the feature matrix
-class GCN_Layer(torch.nn.Module):
-    """
-    Simple GCN layer
-    """
+"""class GCN_Layer(torch.nn.Module):
+    '''
+    #Simple GCN layer
+    '''
 
     def __init__(self, in_feats, out_feats):
         super(GCN_Layer, self).__init__()
@@ -81,6 +82,7 @@ class GCN_Layer(torch.nn.Module):
         prev_output = torch.Tensor(prev_output)
         A = torch.Tensor(A)
 
+
         right_term = torch.mm(prev_output, self.weight)
 
         # Unnormalized
@@ -95,34 +97,57 @@ class GCN_Layer(torch.nn.Module):
             output = torch.mm(output, D_hat)
             output = torch.mm(output, right_term)
 
-        return output
+        return output"""
 
+class GCN_Layer(nn.Module):
+    def __init__(self, in_features, out_features, norm = True):
+        super(GCN_Layer, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = nn.Parameter(torch.FloatTensor(in_features, out_features))
+        self.bias = nn.Parameter(torch.FloatTensor(out_features))
+        self.reset_parameters()
+        self.norm = norm
+
+    def reset_parameters(self):
+        stdv = 1 / (self.weight.size(1))**0.5
+        self.weight.data.uniform_(-stdv, stdv)
+        self.bias.data.uniform_(-stdv, stdv)
+
+    def forward(self, layer_in, adj, norm=True):
+        if norm:
+            adj_hat = adj
+            D_hat = torch.diag((torch.sparse.sum(adj_hat, 1).values())**(-1/2))
+            adj_hat = torch.sparse.mm(adj_hat, D_hat)
+            adj_hat = torch.spmm(adj_hat, D_hat)
+            adj = adj_hat
+
+        out = torch.spmm(adj, torch.mm(layer_in, self.weight))
+        return out + self.bias
 
 # LPA-GCN
+class GCN_LPA_Layer(nn.Module):
+    def __init__(self, in_features, out_features, adj):
+        super(GCN_LPA_Layer, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = nn.Parameter(torch.FloatTensor(in_features, out_features))
+        self.bias = nn.Parameter(torch.FloatTensor(out_features))
+        self.mask = nn.Parameter(adj.clone()).to_dense()
+        self.reset_parameters()
 
-class LPA_GCN_Layer(torch.nn.Module):
-    def __init__(self, in_feats, out_feats, A):
-        super(LPA_GCN_Layer, self).__init__()
-        self.in_feats = in_feats
-        self.out_feats = out_feats
-        self.weight = np.random.randn(in_feats, out_feats)
-        self.weight = nn.Parameter(torch.Tensor(self.weight))
-        A = torch.Tensor(A)
-        self.mask_A = A.clone()
-        self.mask_A = nn.Parameter(self.mask_A)
+    def reset_parameters(self):
+        stdv = 1 / (self.weight.size(1)) ** 0.5
+        self.weight.data.uniform_(-stdv, stdv)
+        self.bias.data.uniform_(-stdv, stdv)
 
-    def forward(self, X, A, Y):
-        X = torch.Tensor(X)
-        A = torch.Tensor(A)
-        Y = torch.Tensor(Y)
+    def forward(self, x, adj, y, norm=True):
+        adj = adj.to_dense()
+        if norm:
+            adj = adj * self.mask
+            adj = F.normalize(adj, p=1, dim=1)
+        output = torch.mm(adj, torch.mm(x, self.weight))
+        y_hat = torch.mm(adj, y)
+        return output + self.bias, y_hat
 
-        right_term = torch.mm(X, self.weight)
-        # Hadamard A'
-        A = A * self.mask_A
-        # Normalize D^-1 * A'
-        A = F.normalize(A, p=1, dim=1)
-
-        output = torch.mm(A, right_term)
-        Y_hat = torch.mm(A, Y)
-        return output, Y_hat
 

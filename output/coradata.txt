@@ -1,0 +1,13 @@
+Data: cora| Epochs: 3| Normalize A: False| Learning Rate: 0.01
+
+GCN
+train acc: 0.404| valid acc: 0.437 Results: | test accuracy: 0.36764706
+******************************************************
+
+LPA-GCN
+train acc: 0.3444| valid acc: 0.4148 Results: | test accuracy: 0.29044118
+******************************************************
+
+GraphSAGE
+train acc: 0.0734| valid acc: 0.0519 Results: | test accuracy: 0.08455882
+******************************************************
